@@ -3,6 +3,7 @@ import Slider from '@mui/material/Slider';
 import { alpha, styled } from '@mui/material/styles';
 import './App.css';
 
+// Trial push on new laptop
 export default function App() {
   const [value, setValue] = React.useState<number>(50);
   const handleChange = (event: Event, newValue: number | number[]) => {
