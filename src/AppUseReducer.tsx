@@ -11,44 +11,45 @@ type sliderType = {
   'right-slider': any
 }
 
-export default function App() {
+export default function AppUserReducer() {
   const [value, setValue] = React.useState<sliderType>({
     'top-slider': [10, 90],
     'bottom-slider': [10,10],
     'left-slider': [10,10],
     'right-slider': [10,10]
   });
-  const [thumbSwitch, setThumbSwitch] = React.useState<sliderType>({
-    'top-slider': false,
-    'bottom-slider': false,
-    'left-slider': false,
-    'right-slider': false
-  });
-  const [currentActiveThumb, setCurrentActiveThumb] = React.useState<number>(0);
-  const [how, setHow]= React.useState(['Hello World']);
+  // const [thumbSwitch, setThumbSwitch] = React.useState<sliderType>({
+  //   'top-slider': false,
+  //   'bottom-slider': false,
+  //   'left-slider': false,
+  //   'right-slider': false
+  // });
+  // const [currentActiveThumb, setCurrentActiveThumb] = React.useState<number>(0);
+  const [topValue, setTopValue]= React.useState(value['top-slider']);
   React.useEffect(()=> {
     // setBorderRadius([topLeft, topRight, bottomRight, bottomLeft, slash, leftTop, rightTop, rightBottom, leftBottom]);
     // let borderRadius = `${value['top-slider'][0]}% ${100-value['top-slider'][1]}% ${100-value['bottom-slider'][1]}% ${value['bottom-slider'][0]}% / ${value['left-slider'][0]}% ${100-value['right-slider'][1]}% ${value['right-slider'][0]}% ${100-value['left-slider'][1]}%`;
-    document.getElementById('box')!.style.borderRadius = `${value['top-slider'][0]}% ${100-value['top-slider'][1]}% 10% 10% / 10% 10% 10% 10%`;
-    // document.getElementById('box')!.innerHTML = value['top-slider']
+    // document.getElementById('box')!.style.borderRadius = `${value['top-slider'][0]}% ${100-value['top-slider'][1]}% 10% 10% / 10% 10% 10% 10%`;
+    document.getElementById('box')!.innerHTML = value['top-slider']
   });
   const handleChange = (event: Event | React.SyntheticEvent<Element, Event>, newValue: number | number[], target:keyof(sliderType), activeThumb?: number) => {
     newValue = newValue as number[]; 
-    if (event.type === "mousedown" && activeThumb !== undefined) {
-      setCurrentActiveThumb(activeThumb);
-    } 
-    else if (activeThumb !== currentActiveThumb && activeThumb !== undefined) {
-      thumbSwitch[target]  = !thumbSwitch[target];
-      setThumbSwitch(thumbSwitch);
-      setCurrentActiveThumb(activeThumb);
-    }
-    if(thumbSwitch[target]) [newValue[0], newValue[1]] = [newValue[1], newValue[0]];
-    value[target] = newValue;
-    if (newValue[0] < 0) value[target] = [0, newValue[1]];
-    if (newValue[1] > 100) value[target] = [newValue[0], 100];
+    // if (event.type === "mousedown" && activeThumb !== undefined) {
+    //   setCurrentActiveThumb(activeThumb);
+    // } 
+    // else if (activeThumb !== currentActiveThumb && activeThumb !== undefined) {
+    //   thumbSwitch[target]  = !thumbSwitch[target];
+    //   setThumbSwitch(thumbSwitch);
+    //   setCurrentActiveThumb(activeThumb);
+    // }
+    // if(thumbSwitch[target]) [newValue[0], newValue[1]] = [newValue[1], newValue[0]];
+    // if (newValue[0] < 0) value[target] = [0, newValue[1]];
+    // else if (newValue[1] > 100) value[target] = [newValue[0], 100];
     // else value[target] = newValue;
+    value[target] = newValue;
+    
     setValue(value);
-    setHow(['Idk why but it needs this to work']);
+    setTopValue(value['top-slider'])
   };
 
   return (
