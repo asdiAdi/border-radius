@@ -3,7 +3,6 @@ import Slider from '@mui/material/Slider';
 import './App.css';
 import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
-import RangeSlider from './components/RangeSlider';
 
 type sliderType = {
   'top-slider': any,
@@ -28,11 +27,33 @@ let thumbSwitch = {
 let currentActiveThumb = 0;
 // endTest
 
-export default function AppUseReducer() {
+export default function Iteration1() {
+  // const [value, setValue] = React.useState<sliderType>({
+  //   'top-slider': [20, 80],
+  //   'bottom-slider': [20, 80],
+  //   'left-slider': [20, 80],
+  //   'right-slider': [20, 80]
+  // });
+  // const [thumbSwitch, setThumbSwitch] = React.useState<sliderType>({
+  //   'top-slider': false,
+  //   'bottom-slider': false,
+  //   'left-slider': false,
+  //   'right-slider': false
+  // });
+  // const [currentActiveThumb, setCurrentActiveThumb] = React.useState<number>(0);
   const [how, setHow] = React.useState(['Hello World']);
   const [boxWidth, setBoxWidth] = React.useState(320);
   const [boxHeight, setBoxHeight] = React.useState(320);
   React.useEffect(() => {
+    //([topLeft, topRight, bottomRight, bottomLeft, slash, leftTop, rightTop, rightBottom, leftBottom]);
+    // test
+    // if (!first) {
+    //   console.log(value['top-slider']);
+    //   console.log(thumbSwitch['top-slider']);
+    //   console.log(currentActiveThumb);
+    //   if (value['top-slider'][1] !== 90)first = true;
+    // }
+    // endTest
     document.getElementById('box')!.style.borderRadius = `${value['top-slider'][0]}% ${100 - value['top-slider'][1]}% ${100 - value['bottom-slider'][1]}% ${value['bottom-slider'][0]}% / ${100 - value['left-slider'][1]}% ${100 - value['right-slider'][1]}% ${value['right-slider'][0]}% ${value['left-slider'][0]}%`;
     document.getElementById('box')!.innerText = value['top-slider'].toString();
     document.getElementById('box')!.style.width = `${boxWidth}px`;
@@ -43,6 +64,7 @@ export default function AppUseReducer() {
     document.getElementById('slider-container-left')!.style.height = `${boxHeight*3}px`;
     document.getElementById('slider-container-right')!.style.height = `${boxHeight*3}px`;
     let mainContainerElement = document.getElementById('main-container')!;
+    console.log(parseInt(getComputedStyle(mainContainerElement).height))
     if(boxHeight*3 > parseInt(getComputedStyle(mainContainerElement).height)) mainContainerElement.style.height = `${boxHeight*4}px`;
     else mainContainerElement.style.height = `100vh`;
   });
@@ -69,17 +91,38 @@ export default function AppUseReducer() {
   const handleWidthChange = (event: BaseSyntheticEvent) => setBoxWidth(event.target.value);
   const handleHeightChange = (event: BaseSyntheticEvent) => setBoxHeight(event.target.value);
   
-  const testCallback = (borderVal: number[])  => {
-    console.log(borderVal);
-  }
   return (
     <div id='main-container' className="h-screen flex justify-center content-center bg-slate-300 flex-wrap">
       <div className='w-full flex justify-center flex-wrap'>
-        <RangeSlider onChange={testCallback} id='slider-container-top' className='bg-black'/>
+        <div id='slider-container-top' className='h-min flex justify-center'>
+          <Slider value={value['top-slider']} onChange={(e, v, a) => handleChange(e, v, 'top-slider', a)} onChangeCommitted={(e, v) => handleChange(e, v, 'top-slider')} size="medium" step={1} min={-100} max={200} marks={[{ value: 0 }, { value: 100 }]} sx={{
+            padding: '0',
+            '& .MuiSlider-thumb': {
+              '&:hover, &.Mui-focusVisible, &.Mui-active': {
+                boxShadow: `0px 0px 0px 0px`,
+              },
+              '&:after': {
+                borderRadius: '0px',
+                width: '0px',
+                height: '0px'
+              },
+              borderRadius: '0px',
+              height: '16px',
+              width: '16px',
+            },
+            '& .MuiSlider-track, .MuiSlider-rail': {
+              // opacity: 0
+            },
+            '& .MuiSlider-mark': {
+              height: '5px',
+              width: '5px'
+            }
+          }} />
+        </div>
         <div className='w-full h-min'></div>
         {/*box*/}
         <div id='box-container' className='flex justify-center w-full max-h-80'>
-          <div id='slider-container-left' className='w-min flex justify-center self-center bg-black'>
+          <div id='slider-container-left' className='w-min flex justify-center self-center'>
             <Slider value={value['left-slider']} onChange={(e, v, a) => handleChange(e, v, 'left-slider', a)} onChangeCommitted={(e, v) => handleChange(e, v, 'left-slider')} size="medium" step={1} min={-100} max={200} marks={[{ value: 0 }, { value: 100 }]} orientation="vertical" sx={{
               padding: '0',
               '& .MuiSlider-thumb': {
