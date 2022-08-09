@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { TextField } from '@mui/material';
+import { Alert, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import RangeSlider from '../components/RangeSlider';
 import Button from '@mui/material/Button';
@@ -22,7 +22,7 @@ function combineScaleSlider([...top]: number[], [...left]: number[], [...right]:
   scaleSlider(bottom);
   return `${top[0]}%${top[1]}%${bottom[1]}%${bottom[0]}%/${left[1]}%${right[1]}%${right[0]}%${left[0]}%`;
 }
- 
+
 export default function App() {
   // state hooks
   const [topSlider, setTopSlider] = React.useState([-30, 130]);
@@ -34,13 +34,14 @@ export default function App() {
   const [boxHeight, setBoxHeight] = React.useState(450);
   const [initialDocumentHeight, setInitialDocumentHeight] = React.useState<number>();
   const [initialDocumentWidth, setInitialDocumentWidth] = React.useState<number>();
-  
+
 
   // effect hooks
   React.useEffect(() => {
     setInitialDocumentHeight(document.body.clientHeight);
     setInitialDocumentWidth(document.body.clientWidth);
-  },[]) //allows useEffect to only run once
+    document.getElementById('box')!.style.backgroundImage = 'linear-gradient(-225deg, #fff 0%, rgba(255,255,255,0) 40%, rgba(0,255,255,0) 60%, cyan 100%),linear-gradient(45deg, #3023AE 0%, #f09 100%)';
+  }, []) //allows useEffect to only run once
   React.useEffect(() => {
     let boxElement = document.getElementById('box')!;
     setCombinedBorderRadius(combineScaleSlider(topSlider, leftSlider, rightSlider, bottomSlider));
@@ -59,15 +60,15 @@ export default function App() {
     // height
     let mainContainerElement = document.getElementById('main-container')!;
     let mainContainerHeight = parseInt(getComputedStyle(mainContainerElement).height);
-    if(boxHeight * 1.5 +208 > mainContainerHeight) mainContainerElement.style.height = `${boxHeight * 1.5 +250}px`;
-    else if(boxHeight * 1.5 +250 < mainContainerHeight && initialDocumentHeight && boxHeight * 1.5 +208 > initialDocumentHeight) mainContainerElement.style.height = `${boxHeight * 1.5 +208}px`;
-    else if(initialDocumentHeight) mainContainerElement.style.height = `${initialDocumentHeight}px`;
+    if (boxHeight * 1.5 + 208 > mainContainerHeight) mainContainerElement.style.height = `${boxHeight * 1.5 + 250}px`;
+    else if (boxHeight * 1.5 + 250 < mainContainerHeight && initialDocumentHeight && boxHeight * 1.5 + 208 > initialDocumentHeight) mainContainerElement.style.height = `${boxHeight * 1.5 + 208}px`;
+    else if (initialDocumentHeight) mainContainerElement.style.height = `${initialDocumentHeight}px`;
 
     // width
     let mainContainerWidth = parseInt(getComputedStyle(mainContainerElement).width);
-    if(boxWidth * 1.5 + 10> mainContainerWidth) mainContainerElement.style.width = `${boxWidth * 1.5 +50}px`;
-    else if(boxWidth * 1.5 + 50 < mainContainerWidth && initialDocumentWidth && boxWidth * 1.5 + 10 > initialDocumentWidth) mainContainerElement.style.width = `${boxWidth * 1.5 +10}px`;
-    else if(initialDocumentWidth) mainContainerElement.style.width = `${initialDocumentWidth}px`;
+    if (boxWidth * 1.5 + 10 > mainContainerWidth) mainContainerElement.style.width = `${boxWidth * 1.5 + 50}px`;
+    else if (boxWidth * 1.5 + 50 < mainContainerWidth && initialDocumentWidth && boxWidth * 1.5 + 10 > initialDocumentWidth) mainContainerElement.style.width = `${boxWidth * 1.5 + 10}px`;
+    else if (initialDocumentWidth) mainContainerElement.style.width = `${initialDocumentWidth}px`;
   }, [boxWidth, boxHeight, document.body.clientHeight]);
 
   // callback functions
@@ -84,35 +85,39 @@ export default function App() {
   async function copyToClipboard() {
     await navigator.clipboard.writeText(combinedBorderRadius);
     // alert
+    document.getElementById('alert')!.style.visibility = "visible";
+    setTimeout(()=>document.getElementById('alert')!.style.visibility = "hidden", 2000);
   }
 
   return (
-    <div id='main-container' className="h-screen flex justify-center content-center bg-slate-300 flex-wrap">
+
+    <div id='main-container' className="h-screen flex justify-center content-center flex-wrap bg-slate-400">
       <div className='w-full flex justify-center flex-wrap'>
         <RangeSlider id='top-slider' className='h-min flex justify-center' initValue={topSlider} onChange={setTopSlider} />
         <div id='box-container' className='flex justify-center w-full -mt-[2px]'>
           <RangeSlider id='left-slider' className='h-min flex justify-center self-center -mr-[2px]' initValue={leftSlider} onChange={setLeftSlider} orientation='vertical' />
-          <Box id='box' className='bg-orange-400 w-80 flex flex-wrap' />
+          <Box id='box' className='w-80 flex flex-wrap justify-center items-center' />
           <RangeSlider id='right-slider' className='h-min flex justify-center self-center -ml-[2px]' initValue={rightSlider} onChange={setRightSlider} orientation='vertical' />
         </div>
         <RangeSlider id='bottom-slider' className='h-min flex justify-center -mt-[2px]' initValue={bottomSlider} onChange={setBottomSlider} />
       </div>
       <div className='w-full flex justify-center mt-28'>
-          <TextField className='w-80' label="border-radius" size="small" multiline={true} value={combinedBorderRadius} InputProps={{ readOnly: true }} sx={{
-            '& .MuiInputBase-root': {
-              borderRadius: '4px 0% 0% 4px / 4px 0% 0% 4px'
-            },
-            '& .MuiInputBase-input': {
-              textAlign: 'center'
-            }
-          }} />
-          <Button variant="contained" onClick={copyToClipboard} sx={{ borderRadius: '0% 4px 4px 0% / 0% 4px 4px 0%', width: '2rem' }}>COPY</Button>
-        </div>
-        <div className='w-72 flex justify-center mt-4'>
-          <TextField label="width(px)" size="small" type="number" value={boxWidth} onChange={handleWidthChange} />
-          <div className='w-4 h-min'></div>
-          <TextField label="height(px)" size="small" type="number" value={boxHeight} onChange={handleHeightChange} />
-        </div>
+        <TextField className='w-80' label="border-radius" size="small" multiline={true} value={combinedBorderRadius} InputProps={{ readOnly: true }} sx={{
+          '& .MuiInputBase-root': {
+            borderRadius: '4px 0% 0% 4px / 4px 0% 0% 4px'
+          },
+          '& .MuiInputBase-input': {
+            textAlign: 'center'
+          }
+        }} />
+        <Button variant="contained" onClick={copyToClipboard} sx={{ borderRadius: '0% 4px 4px 0% / 0% 4px 4px 0%', width: '2rem' }}>COPY</Button>
+      </div>
+      <div className='w-72 flex justify-center mt-4'>
+        <TextField label="width(px)" size="small" type="number" value={boxWidth} onChange={handleWidthChange} />
+        <div className='w-4 h-min'></div>
+        <TextField label="height(px)" size="small" type="number" value={boxHeight} onChange={handleHeightChange} />
+      </div>
+      <Alert id='alert' severity="success" className='fixed z-50 left-1/2 top-1/3 -translate-x-1/2 invisible'>Copied to clipboard</Alert>
     </div>
   );
 }

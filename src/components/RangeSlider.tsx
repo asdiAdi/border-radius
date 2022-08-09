@@ -46,6 +46,7 @@ export default function RangeSlider({initValue = [10, 90], onChange, id, classNa
                     borderRadius: '0px',
                     height: '16px',
                     width: '16px',
+                    backgroundColor: '#0ff'
                 },
                 '& .MuiSlider-track': {
                     // opacity: 0,
